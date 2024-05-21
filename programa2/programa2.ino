@@ -10,7 +10,7 @@
 DHT dht(DHTPIN, DHTTYPE);
 const char* ssid     = "Redmi 8";      // SSID
 const char* password = "1234567890.";      // Password
-const char* host = "192.168.32.251";  // Dirección IP local o remota, del Servidor Web
+const char* host = "192.168.217.251";  // Dirección IP local o remota, del Servidor Web
 const int   port = 80;            // Puerto, HTTP es 80 por defecto, cambiar si es necesario.
 const int   watchdog = 2000;        // Frecuencia del Watchdog
 unsigned long previousMillis = millis(); 
@@ -24,7 +24,7 @@ float t_max;
 float h_max;
 
 const int sensorLuz = 35;
-const int sensorHumSuelo = 5;
+const int sensorHumSuelo = 34;
 int gpio5_pin = 16; // El GPIO5 de la tarjeta ESP32, corresponde al pin D5 identificado físicamente en la tarjeta. Este pin será utilizado para una salida de un LED.
 int gpio4_pin = 13; // Se debe tener en cuenta que el GPIO4 es el pin D4, ver imagen de GPIOs de la tarjeta ESP32. Este pin será utilizado para una salida de un LED para alertas.
 int gpio2_pin = 2; // Se debe tener en cuenta que el GPIO2 es el pin D2, ver imagen de GPIOs de la tarjeta  ESP32. Este pin será utilizado para una salida de un LED para alertas.
@@ -37,6 +37,7 @@ void setup() {
   pinMode(gpio5_pin, OUTPUT);
   pinMode(gpio2_pin, OUTPUT);
   pinMode(gpio4_pin, OUTPUT);
+  
   Serial.begin(115200);
   Serial.print("Conectando a...");
   Serial.println(ssid);
@@ -73,17 +74,41 @@ void loop() {
   digitalWrite(gpio5_pin, LOW);
   digitalWrite(gpio4_pin, LOW);
   digitalWrite(gpio2_pin, LOW);
+  
+  int sensorValue = analogRead(sensorHumSuelo);
+  int humedadSuelo = map((sensorValue), 4095, 0, 0, 100);
+  Serial.print("humedadSuelo: ");
+  Serial.print(humedadSuelo);
 
-  float hs = 0;
+  
+  
+  int luz = analogRead(sensorLuz);
+  // Convertir las lecturas a porcentajes
+  int iluminacion = map((luz), 0, 4095, 0, 100);
+  Serial.print("luz: ");
+  Serial.print(iluminacion);
+
+  /*
+  int lecturaHumSuelo = analogRead(sensorHumSuelo);
+  
+  float humedadSuelo = map(lecturaHumSuelo, 4095, 0, 0, 100);
+  Serial.print("humedad suelo: ");
+  Serial.print(humedadSuelo);
+  */
+  
+  /*
+  int hs = 0;
   int luz = 0;
   //lee la luz
   luz = int(map(int(analogRead(sensorLuz)), 0, 4095, 0, 100));
+  Serial.print("luz: ");
+  Serial.print(luz);
 
   //lee la humedad de suelo
   hs = 100 - int(map(int(analogRead(sensorHumSuelo)), 1840, 5500, 0, 100));
   Serial.print("humedad suelo: ");
   Serial.print(hs);
-
+  */
 
 // Primero se consultan los datos maximos de temp y hum
 
@@ -176,10 +201,10 @@ void loop() {
     url2 += t;
     url2 += "&id=";
     url2 += id;
-    url2 += "&iluminacion=";
-    url2 += luz;
+    url2 += "&luz=";
+    url2 += iluminacion;
     url2 += "&humedad_tierra=";
-    url2 += hs;
+    url2 += humedadSuelo;
 
     
     // Envío de la solicitud al Servidor
