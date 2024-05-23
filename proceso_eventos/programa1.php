@@ -19,4 +19,42 @@ echo "sql1...".$sql1; // Se imprime la cadena sql enviada a la base de datos, se
 $result1 = $mysqli->query($sql1);
 echo "result es...".$result1; // Si result es 1, quiere decir que el ingreso a la base de datos fue correcto.
 
+// si se supera un maximo registrarlo en la tabla de registro eventos 
+//hacer primera la consulta y luego insert
+//comparar
+//describir el evento en la interfaz
+//grabar el 'id' con el de la tabla eventos
+
+if ($temperatura > 27) { 
+    $id_limite = 1; 
+    $id_evento = "Se supero la temperatura maxima"; 
+
+    $sql2 = "INSERT into registro_eventos (fecha, hora, id_limite, nombre_evento) VALUES (CURDATE(), CURTIME(), '$id_limite', '$id_evento')";
+    echo "sql2: " . $sql2;
+    $result2 = $mysqli->query($sql2);
+    echo "result2: " . $result2;
+}
+
+if ($temperatura < 22) { 
+    $id_limite = 2; 
+    $id_evento = "Esta por debajo de la temperatura minima"; 
+
+    $sql3 = "INSERT into registro_eventos (fecha, hora, id_limite, nombre_evento) VALUES (CURDATE(), CURTIME(), '$id_limite', '$id_evento')";
+    echo "sql3: " . $sql3;
+    $result3 = $mysqli->query($sql3);
+    echo "result3: " . $result3;
+}
+
+if ($humedad_tierra < 30) { 
+    $id_limite = 3; 
+    $id_evento = "Humedad esta por debajo del limite"; 
+
+    $sql4 = "INSERT into registro_eventos (fecha, hora, id_limite, nombre_evento) VALUES (CURDATE(), CURTIME(), '$id_limite', '$id_evento')";
+    echo "sql4: " . $sql4;
+    $result4 = $mysqli->query($sql4);
+    echo "result4: " . $result4;
+}
+
+//Realizar condicion de actuador
+
 ?>
