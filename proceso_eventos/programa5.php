@@ -30,7 +30,7 @@ for ($i=$long_humT_min;$i<2;$i++)
     $humT_min = "0".$humT_min;
   }
 
-//CONSULTA MINIMO DE ILUMINACION
+//CONSULTA MINIMO DE TEMPERATURA
 $sql3 = "SELECT * from datos_limite where id=2"; 
 // la siguiente l�nea ejecuta la consulta guardada en la variable sql, con ayuda del objeto de conexi�n a la base de datos mysqli
 $result3 = $mysqli->query($sql3);
@@ -43,5 +43,19 @@ for ($i=$long_temp_min;$i<2;$i++)
     $temp_min = "0".$temp_min;
   }
 
+  /*
+$sql4 = "SELECT * from modo_motor"  ; 
+// la siguiente l�nea ejecuta la consulta guardada en la variable sql, con ayuda del objeto de conexi�n a la base de datos mysqli
+$result4 = $mysqli->query($sql4);
+$row3 = $result4->fetch_array(MYSQLI_NUM);
+$temp_min = $row3[2];  
+
+$long_temp_min= strlen($temp_min);
+for ($i=$long_temp_min;$i<2;$i++)
+  {
+    $temp_min = "0".$temp_min;
+  }
+  */
+  
   echo $temp_max.$humT_min.$temp_min; // Si result es 1, quiere decir que el ingreso a la base de datos fue correcto.
 ?>

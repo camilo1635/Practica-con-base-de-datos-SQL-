@@ -10,7 +10,7 @@
 DHT dht(DHTPIN, DHTTYPE);
 const char* ssid     = "Redmi 8";      // SSID
 const char* password = "1234567890.";      // Password
-const char* host = "192.168.129.251";  // Dirección IP local o remota, del Servidor Web
+const char* host = "192.168.109.251";  // Dirección IP local o remota, del Servidor Web
 const int   port = 80;            // Puerto, HTTP es 80 por defecto, cambiar si es necesario.
 const int   watchdog = 2000;        // Frecuencia del Watchdog
 unsigned long previousMillis = millis(); 
@@ -28,9 +28,9 @@ float t_min;
 
 const int sensorLuz = 35;
 const int sensorHumSuelo = 34;
-int ledazul = 16; // El GPIO5 de la tarjeta ESP32, corresponde al pin D5 identificado físicamente en la tarjeta. Este pin será utilizado para una salida de un LED.
+int ledazul = 14; // El GPIO5 de la tarjeta ESP32, corresponde al pin D5 identificado físicamente en la tarjeta. Este pin será utilizado para una salida de un LED.
 int ledrojo = 13; // Se debe tener en cuenta que el GPIO4 es el pin D4, ver imagen de GPIOs de la tarjeta ESP32. Este pin será utilizado para una salida de un LED para alertas.
-int motor = 2; // Se debe tener en cuenta que el GPIO2 es el pin D2, ver imagen de GPIOs de la tarjeta  ESP32. Este pin será utilizado para una salida de un LED para alertas.
+int motor = 12; // Se debe tener en cuenta que el GPIO2 es el pin D2, ver imagen de GPIOs de la tarjeta  ESP32. Este pin será utilizado para una salida de un LED para alertas.
 
  
 void setup() {
@@ -76,9 +76,9 @@ void loop() {
   digitalWrite(motor, LOW);
 
   //lectura sensor de humedad de suelo
-  int sensorValue = analogRead(sensorHumSuelo);
+  float sensorValue = analogRead(sensorHumSuelo);
   // Convertir las lecturas a porcentajes
-  int humedadSuelo = map((sensorValue), 4095, 0, 0, 100);
+  float humedadSuelo = map((sensorValue), 4095, 0, 0, 100);
   Serial.print("humedadSuelo: ");
   Serial.print(humedadSuelo);
 
@@ -121,7 +121,7 @@ void loop() {
   //organización de datos, divididos 
       int longitud = line.length();
       int longitud_f = longitud;
-      longitud = longitud - 4;
+      longitud = longitud - 6;
       
       dato = line.substring(longitud,longitud_f);
       cade = "Dato recibido es...";
@@ -129,7 +129,7 @@ void loop() {
       Serial.print(cade);
 
       temp_min = dato.substring(4,6);
-      humT_min= dato.substring(2,4);
+      humT_min = dato.substring(2,4);
       temp_max = dato.substring(0,2);
        
       // Lo siguiente se utiliza para pasar la cadena de texto a un flotante, para poder comparar
@@ -166,13 +166,13 @@ void loop() {
         }
       if (humedadSuelo < ht_min)
         {
-         Serial.print("ALERTA HUMEDAD");
-         digitalWrite(ledazul, HIGH);//activa ventilador
+         Serial.print("ALERTA HUMEDAD MINIMA");
+         digitalWrite(motor, HIGH);//activa ventilador
         }
        if (t < t_min)
         {
          Serial.print("ALERTA TEMPERATURA MINIMA");
-         digitalWrite(motor, HIGH);
+         digitalWrite(ledazul, HIGH);
         }
       delay(2000);
     }
@@ -217,11 +217,10 @@ void loop() {
       line = client.readStringUntil('\r');
       Serial.print(line);
     }
-      /*
-      digitalWrite(gpio5_pin, HIGH);
+      
       Serial.print("Dato ENVIADO");
-      delay(2000);
-      */
+      delay(15000);
+      
   }
   
 }
