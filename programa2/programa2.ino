@@ -123,29 +123,22 @@ void loop() {
   //organización de datos, divididos 
       int longitud = line.length();
       int longitud_f = longitud;
-      longitud = longitud - 9;
+      longitud = longitud - 8;
       
       dato = line.substring(longitud,longitud_f);
       cade = "Dato recibido es...";
       cade += dato; 
       Serial.print(cade);
 
-      modo = dato.substring(8);
-      estado = dato.substring(7);
+      modo = dato.substring(7,8);
+      estado = dato.substring(6,7);
       temp_min = dato.substring(4,6);
       humT_min = dato.substring(2,4);
       temp_max = dato.substring(0,2);
 
-      Serial.print("modo: ");
+      Serial.println("modo: ");
       Serial.println(modo);
-       /*
-      if(estado == "1"){
-        digitalWrite(motor, HIGH);
-      }else{
-        digitalWrite(motor, LOW);
-      }
-      */
-       
+      
       // Lo siguiente se utiliza para pasar la cadena de texto a un flotante, para poder comparar
       char cadena[temp_max.length()+1];
       temp_max.toCharArray(cadena, temp_max.length()+1);
@@ -168,7 +161,7 @@ void loop() {
       
       Serial.print("Valor: ");
       Serial.print(valor);
-
+      
       cade = "Temperatura maxima es...";
       cade += t_max;
       Serial.print(cade);
@@ -177,7 +170,7 @@ void loop() {
       cade += ht_min;
       Serial.print(cade);
 
-      cade = "Temperatura minima tierra es...";
+      cade = "Temperatura minima es...";
       cade += t_min;
       Serial.print(cade);
 
@@ -189,7 +182,7 @@ void loop() {
       if (modo == "1" && (humedadSuelo < ht_min)) {
         Serial.print("ALERTA HUMEDAD MINIMA");
         digitalWrite(motor, HIGH); // activa ventilador
-        } else if (modo == "0" && valor == 10.00) {
+        } else if (modo == "0" && valor == 1.00) {
             digitalWrite(motor, HIGH);
         } else {
             digitalWrite(motor, LOW);
