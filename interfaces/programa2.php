@@ -15,7 +15,7 @@ $mysqli = new mysqli($host, $user, $pw, $db); // Aqu� se hace la conexi�n a 
       <table width="80%" align=center cellpadding=5 border=1 bgcolor="#FFFFFF">
     	 <tr>
          <td valign="top" align=center width=80& colspan=8 bgcolor="green"">
-           <img src="img/invernadero.jpg" width=800 height=250>
+           <img src="img/inverna.jpg" width=800 height=250>
          </td>
  	     </tr>
  	     <tr>

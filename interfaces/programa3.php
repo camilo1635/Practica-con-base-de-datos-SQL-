@@ -50,10 +50,10 @@ include "conexion.php";  // Conexi�n tiene la informaci�n sobre la conexi�
             <b>Hora</b>
          </td>
          <td valign="top" align=center bgcolor="#E1E1E1">
-            <b>id_evento</b>
+            <b>id_limite</b>
          </td>
          <td valign="top" align=center bgcolor="#E1E1E1">
-            <b>id_limite</b>
+            <b>nombre_evento</b>
          </td>
  	     </tr>
 <?php
@@ -70,7 +70,7 @@ while($row1 = $result1->fetch_array(MYSQLI_NUM))
  $fecha = $row1[1];
  $hora = $row1[2];
  $id_limite = $row1[3];
- $id_evento = $row1[4];
+ $nombre_evento = $row1[4];
 
  $contador++;
 ?>
@@ -88,7 +88,7 @@ while($row1 = $result1->fetch_array(MYSQLI_NUM))
            <?php echo $id_limite; ?> 
          </td>
          <td valign="top" align=center>
-           <?php echo $id_limite; ?> 
+           <?php echo $nombre_evento; ?> 
          </td>
  	     </tr>
 <?php

@@ -10,7 +10,7 @@
 DHT dht(DHTPIN, DHTTYPE);
 const char* ssid     = "Redmi 8";      // SSID
 const char* password = "1234567890.";      // Password
-const char* host = "192.168.43.251";  // Dirección IP local o remota, del Servidor Web
+const char* host = "192.168.29.252";  // Dirección IP local o remota, del Servidor Web
 const int   port = 80;            // Puerto, HTTP es 80 por defecto, cambiar si es necesario.
 const int   watchdog = 2000;        // Frecuencia del Watchdog
 unsigned long previousMillis = millis(); 
@@ -128,7 +128,7 @@ void loop() {
       dato = line.substring(longitud,longitud_f);
       cade = "Dato recibido es...";
       cade += dato; 
-      Serial.print(cade);
+      Serial.println(cade);
 
       modo = dato.substring(7,8);
       estado = dato.substring(6,7);
@@ -136,7 +136,7 @@ void loop() {
       humT_min = dato.substring(2,4);
       temp_max = dato.substring(0,2);
 
-      Serial.println("modo: ");
+      Serial.print("modo: ");
       Serial.println(modo);
       
       // Lo siguiente se utiliza para pasar la cadena de texto a un flotante, para poder comparar
@@ -160,7 +160,7 @@ void loop() {
       float valor = atof(cadena4);
       
       Serial.print("Valor: ");
-      Serial.print(valor);
+      Serial.println(valor);
       
       cade = "Temperatura maxima es...";
       cade += t_max;
