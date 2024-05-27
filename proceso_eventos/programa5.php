@@ -43,19 +43,21 @@ for ($i=$long_temp_min;$i<2;$i++)
     $temp_min = "0".$temp_min;
   }
 
-  /*
-$sql4 = "SELECT * from modo_motor"  ; 
+//consulta estado motor  
+$sql4 = "SELECT * from estado_motor" ; 
 // la siguiente l�nea ejecuta la consulta guardada en la variable sql, con ayuda del objeto de conexi�n a la base de datos mysqli
 $result4 = $mysqli->query($sql4);
-$row3 = $result4->fetch_array(MYSQLI_NUM);
-$temp_min = $row3[2];  
+$row4 = $result4->fetch_array(MYSQLI_NUM);
+$estado = $row4[1];  
 
-$long_temp_min= strlen($temp_min);
-for ($i=$long_temp_min;$i<2;$i++)
-  {
-    $temp_min = "0".$temp_min;
-  }
-  */
   
-  echo $temp_max.$humT_min.$temp_min; // Si result es 1, quiere decir que el ingreso a la base de datos fue correcto.
+//consulta modo motor
+$sql5 = "SELECT * from modo_motor" ; 
+// la siguiente l�nea ejecuta la consulta guardada en la variable sql, con ayuda del objeto de conexi�n a la base de datos mysqli
+$result5 = $mysqli->query($sql5);
+$row5 = $result5->fetch_array(MYSQLI_NUM);
+$modo = $row5[1];
+
+
+  echo $temp_max.$humT_min.$temp_min.$estado.$modo; // Si result es 1, quiere decir que el ingreso a la base de datos fue correcto.
 ?>

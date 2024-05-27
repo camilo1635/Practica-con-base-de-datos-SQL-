@@ -63,6 +63,9 @@ if ($temperatura < $temp_min) {
 if ($humedad_tierra < $humT_min ) { 
     $id_limite = 3; 
     $id_evento = "Humedad esta por debajo del limite"; 
+    $id_limite6 = 6; 
+    $id_evento6 = "Motor se activó en modo automatico"; 
+    
 
     $sql4 = "INSERT into registro_eventos (fecha, hora, id_limite, nombre_evento) VALUES (CURDATE(), CURTIME(), '$id_limite', '$id_evento')";
     echo "sql4: " . $sql4;
@@ -75,6 +78,14 @@ if ($humedad_tierra < $humT_min ) {
     $result5 = $mysqli->query($sql5);
     echo "result5: " . $result5;
     
+    $sql6 = "INSERT into registro_eventos (fecha, hora, id_limite, nombre_evento) VALUES (CURDATE(), CURTIME(), '$id_limite6', '$id_evento6')";
+    $result6 = $mysqli->query($sql6);
+}else{
+    $id_limite7 = 7; 
+    $id_evento7 = "Motor se desactivó en modo automatico"; 
+    
+    $sql7 = "INSERT into registro_eventos (fecha, hora, id_limite, nombre_evento) VALUES (CURDATE(), CURTIME(), '$id_limite7', '$id_evento7')";
+    $result7 = $mysqli->query($sql7);
 }
 
 //Realizar condicion de actuador

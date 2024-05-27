@@ -10,7 +10,7 @@
 DHT dht(DHTPIN, DHTTYPE);
 const char* ssid     = "Redmi 8";      // SSID
 const char* password = "1234567890.";      // Password
-const char* host = "192.168.109.251";  // Dirección IP local o remota, del Servidor Web
+const char* host = "192.168.43.251";  // Dirección IP local o remota, del Servidor Web
 const int   port = 80;            // Puerto, HTTP es 80 por defecto, cambiar si es necesario.
 const int   watchdog = 2000;        // Frecuencia del Watchdog
 unsigned long previousMillis = millis(); 
@@ -20,11 +20,13 @@ String cade;
 String humT_min;
 String temp_max;
 String temp_min;
+String estado;
+String modo;
 String line;
 float t_max;
 float ht_min;
 float t_min;
-
+float valor;
 
 const int sensorLuz = 35;
 const int sensorHumSuelo = 34;
@@ -121,16 +123,28 @@ void loop() {
   //organización de datos, divididos 
       int longitud = line.length();
       int longitud_f = longitud;
-      longitud = longitud - 6;
+      longitud = longitud - 9;
       
       dato = line.substring(longitud,longitud_f);
       cade = "Dato recibido es...";
       cade += dato; 
       Serial.print(cade);
 
+      modo = dato.substring(8);
+      estado = dato.substring(7);
       temp_min = dato.substring(4,6);
       humT_min = dato.substring(2,4);
       temp_max = dato.substring(0,2);
+
+      Serial.print("modo: ");
+      Serial.println(modo);
+       /*
+      if(estado == "1"){
+        digitalWrite(motor, HIGH);
+      }else{
+        digitalWrite(motor, LOW);
+      }
+      */
        
       // Lo siguiente se utiliza para pasar la cadena de texto a un flotante, para poder comparar
       char cadena[temp_max.length()+1];
@@ -146,7 +160,15 @@ void loop() {
       char cadena3[temp_min.length()+1];
       temp_min.toCharArray(cadena3, temp_min.length()+1);
       t_min = atof(cadena3);
+
+      // Lo siguiente se utiliza para pasar la cadena de texto a un flotante, para poder comparar
+      char cadena4[estado.length()+1];
+      estado.toCharArray(cadena4, estado.length()+1);
+      float valor = atof(cadena4);
       
+      Serial.print("Valor: ");
+      Serial.print(valor);
+
       cade = "Temperatura maxima es...";
       cade += t_max;
       Serial.print(cade);
@@ -164,11 +186,15 @@ void loop() {
          Serial.print("ALERTA TEMPERATURA MAXIMA");
          digitalWrite(ledrojo, HIGH);
         }
-      if (humedadSuelo < ht_min)
-        {
-         Serial.print("ALERTA HUMEDAD MINIMA");
-         digitalWrite(motor, HIGH);//activa ventilador
+      if (modo == "1" && (humedadSuelo < ht_min)) {
+        Serial.print("ALERTA HUMEDAD MINIMA");
+        digitalWrite(motor, HIGH); // activa ventilador
+        } else if (modo == "0" && valor == 10.00) {
+            digitalWrite(motor, HIGH);
+        } else {
+            digitalWrite(motor, LOW);
         }
+        
        if (t < t_min)
         {
          Serial.print("ALERTA TEMPERATURA MINIMA");

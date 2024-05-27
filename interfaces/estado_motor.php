@@ -93,13 +93,26 @@ if ($mysqli->connect_error) {
                     $accion = $_POST['ventilador'];
                     $query = "";
                     $message = "";
+                    $id_limite4 = 4; 
+                    $id_evento4 = "Motor se activó en modo manual"; 
+                    $id_limite5 = 5; 
+                    $id_evento5 = "Motor se desactivó en modo manual"; 
                     
                     if ($accion == "ON") {
                         $query = "UPDATE estado_motor SET Activo = 1, Inactivo = 0";
                         $message = "El motor está encendido.";
+
+                        $sql2 = "INSERT into registro_eventos (fecha, hora, id_limite, nombre_evento) VALUES (CURDATE(), CURTIME(), '$id_limite4', '$id_evento4')";
+                        $result2 = $mysqli->query($sql2);
+                        
+
                     } elseif ($accion == "OFF") {
                         $query = "UPDATE estado_motor SET Inactivo = 1, Activo = 0";
                         $message = "El motor está apagado.";
+
+                        $sql2 = "INSERT into registro_eventos (fecha, hora, id_limite, nombre_evento) VALUES (CURDATE(), CURTIME(), '$id_limite5', '$id_evento5')";
+                        $result2 = $mysqli->query($sql2);
+                        
                     }
 
                     if ($query !== "") {

@@ -92,6 +92,7 @@ $mysqli = new mysqli($host, $user, $pw, $db);
                     if ($accion == "Automático") {
                         $query = "UPDATE modo_motor SET Remoto = 0, Automatico = 1"; // Actualiza con tu tabla y condición
                         $message = "El ventilador está en modo Automático.";
+
                     } elseif ($accion == "Remoto") {
                         $query = "UPDATE modo_motor SET Automatico = 0, Remoto = 1"; // Actualiza con tu tabla y condición
                         $message = "El ventilador está en modo Remoto.";
