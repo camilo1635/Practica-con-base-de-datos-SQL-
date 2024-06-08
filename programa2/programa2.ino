@@ -10,7 +10,7 @@
 DHT dht(DHTPIN, DHTTYPE);
 const char* ssid     = "Redmi 8";      // SSID
 const char* password = "1234567890.";      // Password
-const char* host = "192.168.29.252";  // Dirección IP local o remota, del Servidor Web
+const char* host = "192.168.225.251";  // Dirección IP local o remota, del Servidor Web
 const int   port = 80;            // Puerto, HTTP es 80 por defecto, cambiar si es necesario.
 const int   watchdog = 2000;        // Frecuencia del Watchdog
 unsigned long previousMillis = millis(); 
@@ -26,10 +26,9 @@ String line;
 float t_max;
 float ht_min;
 float t_min;
-float valor;
 
-const int sensorLuz = 35;
-const int sensorHumSuelo = 34;
+const int sensorLuz = 35; //pin analogo
+const int sensorHumSuelo = 34; //pin analogo
 int ledazul = 14; // El GPIO5 de la tarjeta ESP32, corresponde al pin D5 identificado físicamente en la tarjeta. Este pin será utilizado para una salida de un LED.
 int ledrojo = 13; // Se debe tener en cuenta que el GPIO4 es el pin D4, ver imagen de GPIOs de la tarjeta ESP32. Este pin será utilizado para una salida de un LED para alertas.
 int motor = 12; // Se debe tener en cuenta que el GPIO2 es el pin D2, ver imagen de GPIOs de la tarjeta  ESP32. Este pin será utilizado para una salida de un LED para alertas.
@@ -153,14 +152,7 @@ void loop() {
       char cadena3[temp_min.length()+1];
       temp_min.toCharArray(cadena3, temp_min.length()+1);
       t_min = atof(cadena3);
-
-      // Lo siguiente se utiliza para pasar la cadena de texto a un flotante, para poder comparar
-      char cadena4[estado.length()+1];
-      estado.toCharArray(cadena4, estado.length()+1);
-      float valor = atof(cadena4);
       
-      Serial.print("Valor: ");
-      Serial.println(valor);
       
       cade = "Temperatura maxima es...";
       cade += t_max;
@@ -179,10 +171,10 @@ void loop() {
          Serial.print("ALERTA TEMPERATURA MAXIMA");
          digitalWrite(ledrojo, HIGH);
         }
-      if (modo == "1" && (humedadSuelo < ht_min)) {
+      if (modo == "1" && (humedadSuelo < ht_min)) { //si el modo esta automatico (1) y la humedad de suelo es menor a minima se cumple la condicion
         Serial.print("ALERTA HUMEDAD MINIMA");
         digitalWrite(motor, HIGH); // activa ventilador
-        } else if (modo == "0" && valor == 1.00) {
+        } else if (modo == "0" && estado == "1") { // si el modo esta remoto (0) y el estado es ON (1) se cumple la condicion
             digitalWrite(motor, HIGH);
         } else {
             digitalWrite(motor, LOW);

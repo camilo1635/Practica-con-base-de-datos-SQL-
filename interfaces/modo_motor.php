@@ -1,11 +1,51 @@
 <?php
 include "conexion.php";  // Conexión tiene la información sobre la conexión de la base de datos.
 $mysqli = new mysqli($host, $user, $pw, $db);
+
+if ($mysqli->connect_error) {
+    die("Error en la conexión: " . $mysqli->connect_error);
+}
+
+// Consulta el estado actual del modo del motor
+$query = "SELECT valor FROM modo_motor LIMIT 1";
+$result = $mysqli->query($query);
+
+$estado_actual = "";
+if ($result && $result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $estado_actual = $row['valor'] == 1 ? "El motor está en modo Automático." : "El motor está en modo Remoto.";
+} else {
+    $estado_actual = "No se pudo obtener el estado del motor.";
+}
+
+$message = $estado_actual;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['ventilador'])) {
+        $accion = $_POST['ventilador'];
+        $query = "";
+
+        if ($accion == "Automático") {
+            $query = "UPDATE modo_motor SET valor = 1";
+            $message = "El motor está en modo Automático.";
+        } elseif ($accion == "Remoto") {
+            $query = "UPDATE modo_motor SET valor = 0";
+            $message = "El motor está en modo Remoto.";
+        }
+
+        if ($query !== "") {
+            $result = $mysqli->query($query);
+            if (!$result) {
+                $message = "Error al actualizar el modo del motor: " . $mysqli->error;
+            }
+        }
+    }
+}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>Moto del Ventilador</title>
+    <title>Modo</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -74,41 +114,15 @@ $mysqli = new mysqli($host, $user, $pw, $db);
 <body>
     <div class="container">
         <div class="header">
-            <img src="https://img.freepik.com/foto-gratis/crecimiento-plantas-organicas-frescas-tecnologia-invernadero-moderna-generada-ia_188544-37874.jpg?w=996&t=st=1716761047~exp=1716761647~hmac=69e0099480e39719293812316176b9e787bcf668899c25d84c3d260afa0af38d">
+            <img src="https://img.freepik.com/foto-gratis/crecimiento-plantas-organicas-frescas-tecnologia-invernadero-moderna-generada-ia_188544-37874.jpg?w=996&t=st=1716761047~exp=1716761647~hmac=69e0099480e39719293812316176b9e787bcf668899c25d84c3d260afa0af38d" alt="Invernadero">
         </div>
         <div class="content">
             <h1>Control del motor</h1>
+            <p class='message'><?php echo $message; ?></p>
             <form method="post" action="">
                 <input type="submit" name="ventilador" value="Automático">
                 <input type="submit" name="ventilador" value="Remoto">
             </form>
-            <?php
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                if (isset($_POST['ventilador'])) {
-                    $accion = $_POST['ventilador'];
-                    $query = "";
-                    $message = "";
-
-                    if ($accion == "Automático") {
-                        $query = "UPDATE modo_motor SET Remoto = 0, Automatico = 1"; // Actualiza con tu tabla y condición
-                        $message = "El ventilador está en modo Automático.";
-
-                    } elseif ($accion == "Remoto") {
-                        $query = "UPDATE modo_motor SET Automatico = 0, Remoto = 1"; // Actualiza con tu tabla y condición
-                        $message = "El ventilador está en modo Remoto.";
-                    }
-
-                    if ($query !== "") {
-                        $result = $mysqli->query($query);
-                        if ($result) {
-                            echo "<p class='message'>$message</p>";
-                        } else {
-                            echo "<p class='message'>Error al actualizar el modo del ventilador: " . $mysqli->error . "</p>";
-                        }
-                    }
-                }
-            }
-            ?>
         </div>
         <div class="footer">
             &copy; Modo del Motor
@@ -116,5 +130,3 @@ $mysqli = new mysqli($host, $user, $pw, $db);
     </div>
 </body>
 </html>
-
-

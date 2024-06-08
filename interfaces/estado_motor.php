@@ -6,11 +6,58 @@ if ($mysqli->connect_error) {
     die("Error en la conexión: " . $mysqli->connect_error);
 }
 
+// Consulta el estado actual del motor
+$query = "SELECT valor FROM estado_motor LIMIT 1";
+$result = $mysqli->query($query);
+
+$estado_actual = "";
+if ($result && $result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $estado_actual = $row['valor'] == 1 ? "El motor está encendido." : "El motor está apagado.";
+} else {
+    $estado_actual = "No se pudo obtener el estado del motor.";
+}
+
+$message = $estado_actual;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['ventilador'])) {
+        $accion = $_POST['ventilador'];
+        $query = "";
+        $id_limite4 = 4; 
+        $id_evento4 = "Motor se activó en modo manual"; 
+        $id_limite5 = 5; 
+        $id_evento5 = "Motor se desactivó en modo manual"; 
+        
+        if ($accion == "ON") {
+            $query = "UPDATE estado_motor SET valor = 1";
+            $message = "El motor está encendido.";
+
+            $sql2 = "INSERT into registro_eventos (fecha, hora, id_limite, nombre_evento) VALUES (CURDATE(), CURTIME(), '$id_limite4', '$id_evento4')";
+            $result2 = $mysqli->query($sql2);
+            
+        } elseif ($accion == "OFF") {
+            $query = "UPDATE estado_motor SET valor = 0";
+            $message = "El motor está apagado.";
+
+            $sql2 = "INSERT into registro_eventos (fecha, hora, id_limite, nombre_evento) VALUES (CURDATE(), CURTIME(), '$id_limite5', '$id_evento5')";
+            $result2 = $mysqli->query($sql2);
+            
+        }
+
+        if ($query !== "") {
+            $result = $mysqli->query($query);
+            if (!$result) {
+                $message = "Error al actualizar el estado del motor: " . $mysqli->error;
+            }
+        }
+    }
+}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>Activación del Motor</title>
+    <title>Estado</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -83,49 +130,11 @@ if ($mysqli->connect_error) {
         </div>
         <div class="content">
             <h1>Activación del Motor Remoto</h1>
+            <p class='message'><?php echo $message; ?></p>
             <form method="post" action="">
                 <input type="submit" name="ventilador" value="ON">
                 <input type="submit" name="ventilador" value="OFF">
             </form>
-            <?php
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                if (isset($_POST['ventilador'])) {
-                    $accion = $_POST['ventilador'];
-                    $query = "";
-                    $message = "";
-                    $id_limite4 = 4; 
-                    $id_evento4 = "Motor se activó en modo manual"; 
-                    $id_limite5 = 5; 
-                    $id_evento5 = "Motor se desactivó en modo manual"; 
-                    
-                    if ($accion == "ON") {
-                        $query = "UPDATE estado_motor SET Activo = 1, Inactivo = 0";
-                        $message = "El motor está encendido.";
-
-                        $sql2 = "INSERT into registro_eventos (fecha, hora, id_limite, nombre_evento) VALUES (CURDATE(), CURTIME(), '$id_limite4', '$id_evento4')";
-                        $result2 = $mysqli->query($sql2);
-                        
-
-                    } elseif ($accion == "OFF") {
-                        $query = "UPDATE estado_motor SET Inactivo = 1, Activo = 0";
-                        $message = "El motor está apagado.";
-
-                        $sql2 = "INSERT into registro_eventos (fecha, hora, id_limite, nombre_evento) VALUES (CURDATE(), CURTIME(), '$id_limite5', '$id_evento5')";
-                        $result2 = $mysqli->query($sql2);
-                        
-                    }
-
-                    if ($query !== "") {
-                        $result = $mysqli->query($query);
-                        if ($result) {
-                            echo "<p class='message'>$message</p>";
-                        } else {
-                            echo "<p class='message'>Error al actualizar el estado del motor: " . $mysqli->error . "</p>";
-                        }
-                    }
-                }
-            }
-            ?>
         </div>
         <div class="footer">
             &copy;  Activación del Motor
@@ -133,4 +142,3 @@ if ($mysqli->connect_error) {
     </div>
 </body>
 </html>
-

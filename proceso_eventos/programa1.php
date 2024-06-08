@@ -21,7 +21,6 @@ $result1 = $mysqli->query($sql1);
 echo "result es...".$result1; // Si result es 1, quiere decir que el ingreso a la base de datos fue correcto.
 
 //condicionales
-
 $sql2 = "SELECT * from datos_limite where id=1"; 
 // la siguiente l�nea ejecuta la consulta guardada en la variable sql, con ayuda del objeto de conexi�n a la base de datos mysqli
 $result2 = $mysqli->query($sql2);
@@ -60,7 +59,7 @@ if ($temperatura < $temp_min) {
     echo "result3: " . $result3;
 }
 
-if ($humedad_tierra < $humT_min ) { 
+if ($humedad_tierra < $humT_min) { 
     $id_limite = 3; 
     $id_evento = "Humedad esta por debajo del limite"; 
     $id_limite6 = 6; 
@@ -73,7 +72,7 @@ if ($humedad_tierra < $humT_min ) {
     echo "result4: " . $result4;
 
     
-    $sql5 = "INSERT into estado_motor (Inactivo, Activo) VALUES (0,1)";
+    $sql5 = "INSERT into estado_motor (valor) VALUES (1)";
     echo "sql5: " . $sql5;
     $result5 = $mysqli->query($sql5);
     echo "result5: " . $result5;
